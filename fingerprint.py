@@ -54,11 +54,11 @@ def parse_fingerprint(fp: str) -> bytes:
         raise ValueError(f"Не удалось декодировать base64. {e}")
 
 
-def visual_fingerprint(digest: bytes) -> str:
-    if not (12 <= len(digest) <= 32):
-        raise ValueError(f"Длина отпечатка {len(digest)} байт вне допустимого диапазона 12-32 байт")
+def visual_fingerprint(data: bytes) -> str:
+    if not (12 <= len(data) <= 32):
+        raise ValueError(f"Длина отпечатка {len(data)} байт вне допустимого диапазона 12-32 байт")
     
-    size = 13 + len(digest) // 2
+    size = 13 + len(data) // 2
     if size % 2 == 0:
         size += 1
     size = max(15, min(33, size))
@@ -72,7 +72,7 @@ def visual_fingerprint(digest: bytes) -> str:
     field[x][y] = -1
 
     # Алгоритм рисования псевдографического отпечатка
-    for byte in digest:
+    for byte in data:
         for _ in range(4):
             dx = 1 if (byte & 1) else -1
             dy = 1 if (byte & 2) else -1
@@ -101,9 +101,9 @@ if len(sys.argv) < 2:
 fingerprint_str = sys.argv[1]
 
 try:
-    digest = parse_fingerprint(fingerprint_str)
-    print(f"Длина отпечатка: {len(digest)} байт")
-    print(visual_fingerprint(digest))
+    data = parse_fingerprint(fingerprint_str)
+    print(f"Длина отпечатка: {len(data)} байт")
+    print(visual_fingerprint(data))
     
 except Exception as e:
     print(f"Ошибка: {e}", file=sys.stderr)
